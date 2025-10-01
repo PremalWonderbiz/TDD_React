@@ -58,6 +58,6 @@ describe('home tests', () => {
     it('should show home price', async() => {
         render(<Homes />);
         const homePrices = await screen.findAllByTestId('home-price');
-        expect(getNodeText(homePrices[0])).toBe('1');
+        expect(getNodeText(homePrices[0])).toBe('$1/night');
     });
 });

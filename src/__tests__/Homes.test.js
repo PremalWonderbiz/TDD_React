@@ -1,7 +1,8 @@
 import React from 'react';
 import Homes from '../components/Homes';
-import { getNodeText, render, screen } from '@testing-library/react';
+import { getAllByTestId, getNodeText, render, screen } from '@testing-library/react';
 import apiClient from '@/services/apiClient';
+import bookingDialogService from '@/services/bookingDialogService';
 
 
 describe('home tests', () => {
@@ -59,5 +60,26 @@ describe('home tests', () => {
         render(<Homes />);
         const homePrices = await screen.findAllByTestId('home-price');
         expect(getNodeText(homePrices[0])).toBe('$1/night');
+    });
+
+    it('should show home book button', async() => {
+        render(<Homes />);
+        const homeBookingButton = await screen.findAllByTestId('home-booking-btn');
+        expect(homeBookingButton[0]).toBeTruthy();
+    });
+
+    it('should open a home booking dialog when clicking the button', async() => {
+        render(<Homes />);
+
+        jest.spyOn(bookingDialogService, 'open').mockImplementation(() => {});
+        const homeBookingButton = await screen.findAllByTestId('home-booking-btn');
+        homeBookingButton[0].click();
+
+        expect(bookingDialogService.open).toHaveBeenCalledWith({
+                    title: "Test Home 1",
+                    image: "test.jpg",
+                    location: "Test Location 1",
+                    price: "1"
+                });
     });
 });

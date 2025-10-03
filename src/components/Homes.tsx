@@ -1,9 +1,19 @@
 import apiClient from '@/services/apiClient';
-import React, { useEffect } from 'react';
+import bookingDialogService from '@/services/bookingDialogService';
+import React, { useEffect, useState } from 'react';
+import Dialog from '@mui/material/Dialog';
+import { DialogContent } from '@mui/material';
+import HomeBooking from './HomeBooking';
+import Notification from './Notification';
 
 const Homes = () => {
   const [homeState, setHomeState] = React.useState<any[]>([]);
+  const [bookingDialogState, setBookingDialogState] = useState<any>({open: false})
 
+  useEffect(() => {
+    const subscription = bookingDialogService.events$.subscribe(state => setBookingDialogState(state))
+    return () => subscription.unsubscribe();
+  },[]);
 
   useEffect(() => {
     const homesDataPromise = Promise.resolve([
@@ -62,11 +72,28 @@ const Homes = () => {
                 <div data-testid="home-title" className="card-title h5">{home.title}</div>
                 <div data-testid="home-location">{home.location}</div>
                 <div data-testid="home-price">${home.price}/night</div>
+                <div className='d-flex justify-content-end'>
+                  <button 
+                  data-testid="home-booking-btn" 
+                  type='button' 
+                  className='btn btn-primary'
+                  onClick={() => bookingDialogService.open(home)}>Book</button>
+                </div>
               </div>
             </div>
           </div>
         )}
       </div>
+        <Dialog 
+          maxWidth="xs"
+          fullWidth={true}
+          open={bookingDialogState.open} 
+          onClose={() => bookingDialogService.close()}>
+          <DialogContent>
+            <HomeBooking home={bookingDialogState.home} />
+          </DialogContent>
+        </Dialog>
+        <Notification />
     </div>
   );
 };

@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import React from 'react';
 
 const Header = () => {
@@ -5,9 +6,9 @@ const Header = () => {
     <div>
       <nav className="py-2 border-bottom navbar navbar-expand navbar-light">
         <div className="container-fluid">
-          <a data-testid="logo" href="/#" className="navbar-brand">
+          <Link data-testid="logo" href="/#" className="navbar-brand">
             <img src="logo192.png" width="40" alt="" />
-          </a>
+          </Link>
           <form data-testid="search" className="mr-auto w-50 form-inline">
             <input placeholder="Search homes" type="text" className="w-50 form-control" />
           </form>
